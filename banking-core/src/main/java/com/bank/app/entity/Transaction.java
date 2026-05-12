@@ -17,6 +17,9 @@ public class Transaction {
     private String toAccount;
     private Double amount;
     private Instant timestamp;
+    private String deviceId;
+    private String deviceType;
+    private String deviceIpAddress;
 
     public Long getId() {
         return id;
@@ -56,5 +59,29 @@ public class Transaction {
 
     public void setTimestamp(Instant timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public String getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
+    }
+
+    public String getDeviceIpAddress() {
+        return deviceIpAddress;
+    }
+
+    public void setDeviceIpAddress(String deviceIpAddress) {
+        this.deviceIpAddress = deviceIpAddress;
     }
 }

@@ -86,6 +86,12 @@
         <input id="toAccountId" type="number" placeholder="Enter destination account id" />
         <label for="transferAmount">Amount</label>
         <input id="transferAmount" type="number" step="0.01" placeholder="Enter amount to transfer" />
+        <label for="deviceId">Device ID</label>
+        <input id="deviceId" type="text" placeholder="Enter device id" />
+        <label for="deviceType">Device Type</label>
+        <input id="deviceType" type="text" placeholder="Enter device type" />
+        <label for="ipAddress">Device IP Address</label>
+        <input id="ipAddress" type="text" placeholder="Enter device ip address" />
         <button id="transferBtn">Transfer</button>
         <div id="transferResult"></div>
     </div>
@@ -154,10 +160,13 @@
             const fromAccountId = document.getElementById('fromAccountId').value;
             const toAccountId = document.getElementById('toAccountId').value;
             const transferAmount = parseFloat(document.getElementById('transferAmount').value);
+            const deviceId = document.getElementById('deviceId').value;
+            const deviceType = document.getElementById('deviceType').value;
+            const ipAddress = document.getElementById('ipAddress').value;
             const result = document.getElementById('transferResult');
 
-            if (!fromAccountId || !toAccountId || isNaN(transferAmount) || transferAmount <= 0) {
-                result.innerHTML = '<pre>Please enter valid transfer details.</pre>';
+            if (!fromAccountId || !toAccountId || isNaN(transferAmount) || transferAmount <= 0 || !deviceId) {
+                result.innerHTML = '<pre>Please enter valid transfer details and device ID.</pre>';
                 return;
             }
 
@@ -170,7 +179,10 @@
                     body: JSON.stringify({
                         fromAccountId: parseInt(fromAccountId, 10),
                         toAccountId: parseInt(toAccountId, 10),
-                        amount: transferAmount
+                        amount: transferAmount,
+                        deviceId,
+                        deviceType,
+                        ipAddress
                     })
                 });
 

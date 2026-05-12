@@ -77,12 +77,33 @@ java -jar target/banking-core-0.0.1-SNAPSHOT.jar
   {
     "fromAccountId": 1,
     "toAccountId": 2,
-    "amount": 100.0
+    "amount": 100.0,
+    "deviceId": "device-001",
+    "deviceType": "MOBILE",
+    "ipAddress": "192.168.0.10"
   }
   ```
 - Response:
   ```text
   Transfer processed
+  ```
+
+### Login
+
+- URL: `POST /api/auth/login`
+- Body:
+  ```json
+  {
+    "username": "jdoe",
+    "password": "secret",
+    "deviceId": "device-001",
+    "deviceType": "MOBILE",
+    "ipAddress": "192.168.0.10"
+  }
+  ```
+- Response:
+  ```text
+  User jdoe authenticated successfully from device device-001
   ```
 
 ## Database

@@ -1,35 +1,26 @@
 package com.bank.app.dto;
 
-public class TransferRequest {
-    private Long fromAccountId;
-    private Long toAccountId;
-    private Double amount;
+public class LoginRequest {
+    private String username;
+    private String password;
     private String deviceId;
     private String deviceType;
     private String ipAddress;
 
-    public Long getFromAccountId() {
-        return fromAccountId;
+    public String getUsername() {
+        return username;
     }
 
-    public void setFromAccountId(Long fromAccountId) {
-        this.fromAccountId = fromAccountId;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public Long getToAccountId() {
-        return toAccountId;
+    public String getPassword() {
+        return password;
     }
 
-    public void setToAccountId(Long toAccountId) {
-        this.toAccountId = toAccountId;
-    }
-
-    public Double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Double amount) {
-        this.amount = amount;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getDeviceId() {
