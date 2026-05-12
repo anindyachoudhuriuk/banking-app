@@ -1,0 +1,45 @@
+# Maven build output
+/target/
+**/target/
+
+# Eclipse files
+/.classpath
+/.project
+/.settings/
+.metadata/
+
+# IntelliJ IDEA files
+*.iml
+.idea/
+/out/
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+logs/
+
+# Database files
+*.db
+*.h2.db
+
+# OS files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Temporary files
+*.tmp
+*.swp
+*~
+
+# Compiled binaries
+*.class
+
+# Packaged archives
+*.jar
+*.war
+*.ear

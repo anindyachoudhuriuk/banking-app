@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Banking App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2rem;
+            background: #f6f7fb;
+            color: #212121;
+        }
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            max-width: 500px;
+        }
+        h1, h2 {
+            margin-top: 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.85rem 1.25rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        button:hover {
+            background: #1d4ed8;
+        }
+        pre {
+            background: #eef2ff;
+            border: 1px solid #c7d2fe;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Banking App</h1>
+        <p>Use this page to create a new account and lookup an existing account.</p>
+    </div>
+
+    <div class="card">
+        <h2>Create New Account</h2>
+        <label for="initialBalance">Initial Balance</label>
+        <input id="initialBalance" type="number" step="0.01" placeholder="Enter initial balance" />
+        <button id="createAccountBtn">Create Account</button>
+        <div id="createResult"></div>
+    </div>
+
+    <div class="card">
+        <h2>Get Account Details</h2>
+        <label for="accountId">Account ID</label>
+        <input id="accountId" type="number" placeholder="Enter account id" />
+        <button id="getAccountBtn">Get Account</button>
+        <div id="getResult"></div>
+    </div>
+
+    <div class="card">
+        <h2>Transfer Between Accounts</h2>
+        <label for="fromAccountId">From Account ID</label>
+        <input id="fromAccountId" type="number" placeholder="Enter source account id" />
+        <label for="toAccountId">To Account ID</label>
+        <input id="toAccountId" type="number" placeholder="Enter destination account id" />
+        <label for="transferAmount">Amount</label>
+        <input id="transferAmount" type="number" step="0.01" placeholder="Enter amount to transfer" />
+        <button id="transferBtn">Transfer</button>
+        <div id="transferResult"></div>
+    </div>
+
+    <script>
+        const apiBase = window.location.protocol.startsWith('http')
+            ? window.location.origin
+            : 'http://localhost:8080';
+
+        const createAccountBtn = document.getElementById('createAccountBtn');
+        const getAccountBtn = document.getElementById('getAccountBtn');
+
+        createAccountBtn.addEventListener('click', async () => {
+            const initialBalance = parseFloat(document.getElementById('initialBalance').value);
+            const body = { initialBalance: isNaN(initialBalance) ? 0 : initialBalance };
+            const result = document.getElementById('createResult');
+            result.textContent = 'Creating account...';
+
+            try {
+                const response = await fetch(`${apiBase}/api/accounts`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    result.innerHTML = `<pre>Error: ${response.status} ${errorText}</pre>`;
+                    return;
+                }
+
+                const data = await response.json();
+                result.innerHTML = `<pre>Account created successfully:\nAccount ID: ${data.accountId}\nAccount number: ${data.accountNumber}</pre>`;
+            } catch (error) {
+                result.innerHTML = `<pre>Request failed: ${error}</pre>`;
+            }
+        });
+
+        getAccountBtn.addEventListener('click', async () => {
+            const accountId = document.getElementById('accountId').value;
+            const result = document.getElementById('getResult');
+            result.textContent = 'Fetching account...';
+
+            if (!accountId) {
+                result.innerHTML = '<pre>Please enter a valid account ID.</pre>';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${apiBase}/api/accounts/${accountId}`);
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    result.innerHTML = `<pre>Error: ${response.status} ${errorText}</pre>`;
+                    return;
+                }
+                const data = await response.json();
+                result.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                result.innerHTML = `<pre>Request failed: ${error}</pre>`;
+            }
+        });
+
+        const transferBtn = document.getElementById('transferBtn');
+
+        transferBtn.addEventListener('click', async () => {
+            const fromAccountId = document.getElementById('fromAccountId').value;
+            const toAccountId = document.getElementById('toAccountId').value;
+            const transferAmount = parseFloat(document.getElementById('transferAmount').value);
+            const result = document.getElementById('transferResult');
+
+            if (!fromAccountId || !toAccountId || isNaN(transferAmount) || transferAmount <= 0) {
+                result.innerHTML = '<pre>Please enter valid transfer details.</pre>';
+                return;
+            }
+
+            result.textContent = 'Submitting transfer...';
+
+            try {
+                const response = await fetch(`${apiBase}/api/transfers`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        fromAccountId: parseInt(fromAccountId, 10),
+                        toAccountId: parseInt(toAccountId, 10),
+                        amount: transferAmount
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    result.innerHTML = `<pre>Error: ${response.status} ${errorText}</pre>`;
+                    return;
+                }
+
+                const data = await response.text();
+                result.innerHTML = `<pre>${data}</pre>`;
+            } catch (error) {
+                result.innerHTML = `<pre>Request failed: ${error}</pre>`;
+            }
+        });
+    </script>
+</body>
+</html>
