@@ -55,4 +55,16 @@ public class TransferRequest {
     public void setIpAddress(String ipAddress) {
         this.ipAddress = ipAddress;
     }
+
+    @Override
+    public String toString() {
+        return "TransferRequest{" +
+                "fromAccountId=" + fromAccountId +
+                ", toAccountId=" + toAccountId +
+                ", amount=" + amount +
+                ", deviceId='" + deviceId + '\'' +
+                ", deviceType='" + deviceType + '\'' +
+                ", ipAddress='" + ipAddress + '\'' +
+                '}';
+    }
 }

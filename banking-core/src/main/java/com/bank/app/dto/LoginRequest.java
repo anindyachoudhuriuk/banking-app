@@ -46,4 +46,14 @@ public class LoginRequest {
     public void setIpAddress(String ipAddress) {
         this.ipAddress = ipAddress;
     }
+
+    @Override
+    public String toString() {
+        return "LoginRequest{" +
+                "username='" + username + '\'' +
+                ", deviceId='" + deviceId + '\'' +
+                ", deviceType='" + deviceType + '\'' +
+                ", ipAddress='" + ipAddress + '\'' +
+                '}';
+    }
 }

@@ -17,15 +17,20 @@ public class AuthService {
     }
 
     public String login(LoginRequest request) {
-        String username = request.getUsername();
-        if (username == null || username.isBlank()) {
-            throw new IllegalArgumentException("Username is required");
+        try {
+            String username = request.getUsername();
+            if (username == null || username.isBlank()) {
+                throw new IllegalArgumentException("Username is required");
+            }
+
+            Device device = resolveDevice(request.getDeviceId(), request.getDeviceType(), request.getIpAddress());
+            eventService.recordEvent("LOGIN_SUCCESS", "username=" + username + ", device=" + device.getDeviceId());
+
+            return "User " + username + " authenticated successfully from device " + device.getDeviceId();
+        } catch (Exception ex) {
+            eventService.recordException("LOGIN_FAILED", request == null ? null : request.toString(), ex);
+            throw ex;
         }
-
-        Device device = resolveDevice(request.getDeviceId(), request.getDeviceType(), request.getIpAddress());
-        eventService.recordEvent("LOGIN_SUCCESS", "username=" + username + ", device=" + device.getDeviceId());
-
-        return "User " + username + " authenticated successfully from device " + device.getDeviceId();
     }
 
     private Device resolveDevice(String deviceId, String deviceType, String ipAddress) {
